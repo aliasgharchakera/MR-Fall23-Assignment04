@@ -1,0 +1,108 @@
+\documentclass[answers]{exam}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{venndiagram}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{float}
+
+\lstset{
+    basicstyle=\ttfamily,
+    columns=fullflexible,
+    frame=single,
+    breaklines=true,
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
+
+\geometry{
+    bottom=2cm, % Adjust this value as needed to leave space for the answer boxes
+}
+
+% Header and footer.
+\pagestyle{headandfoot}
+\runningheadrule
+\runningfootrule
+\runningheader{EE/CE 468/468 Mobile Robotics}{Homework 4}{Fall 2023}
+\runningfooter{}{Page \thepage\ of \numpages}{}
+\firstpageheader{}{}{}
+
+\boxedpoints
+\printanswers
+
+\newcommand{\uvec}[1]{\boldsymbol{\hat{\textbf{#1}}}}
+\newcommand\union\cup
+\newcommand\inter\cap
+\newcommand\ul\underline
+\newcommand\ol\overline
+
+\title{Assignment 4\\ EE/CE 468/468 Mobile Robotics\\ Habib University -- Fall 2023}
+\author{Ali Asghar Yousuf \\ Muhammad Azeem Haider }
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{questions}
+    \question[25]
+    \textbf{Sensor Model}. Assume that you're building a sensor model for the robot used in the previous homework assignment that was equipped with a sensor capable of measuring the distance
+    and bearing to landmarks. Furthermore, assume that this sensor is also capable of identifying
+    the landmarks, so that when you receive a range and bearing measurement you know which
+    landmark it corresponds to.
+
+    A sensor measurement $z = (r, \theta)T$ is composed of the measured distance, $r$, and the measured
+    bearing, $\theta$, to the landmark $l$. Both the range and the bearing measurements are subject to
+    zero-mean Gaussian noise with variances $\sigma_r^2$ and $\sigma_\theta^2$, respectively. The range and the bearing
+    measurements are independent of each other.
+    
+    Design a sensor model $p(z|x, l)$ for this type of sensor and explain it.
+    
+    \begin{solution}
+    \end{solution}
+
+    \question[25]
+    \textbf{Grid-based Occupancy Mapping}. In this problem, you'll implement occupancy grid mapping
+    for a simple one-dimensional environment, spanning from left to right, e.g. imagine one long
+    lane (1D), using a sequence of measurements from a range sensor. The length of the map or
+    this lane is 2 meters. Divide the map into cells of size 10 cm. Choose a representative point
+    (coordinate) for each cell according to some rule and state your rule. Our robot is placed in
+    the left-most cell and has a range sensor mounted on it that is oriented towards the right, or
+    towards the lane. The robot does not move while building this map.
+
+    Assume a very simple model for the sensor: every grid cell with a distance from the robot
+    that is smaller than the measured distance is assumed to be occupied with probability $0.3$.
+    Every cell behind the measured distance is occupied with probability $0.6$. Every cell located
+    more than $20$ cm behind the measured distance should not be updated.
+
+    Assume that we have no prior information about the occupancy of any cell. The robot receives
+    the following sequence of measurements, from its range sensor, at different time steps:
+    $\{101, 82, 91, 112, 99, 151, 96, 85, 99, 105\}$.
+
+    Using MATLAB, find the belief of the map incorporating all the measurements. Plot the
+    probability values of each cell against your chosen representative points to obtain a PMF.
+    Based on the obtained belief, draw the map.
+
+    \begin{solution}
+    \end{solution}
+
+    \question[25]
+    In Problem 4 of the last homework assignment, you used EKF for landmark-based localization, where the line features in the environment played the role of landmarks. In this problem, you'll solve the same localization problem using particle filter, or in other words apply Monte Carlo Localization.
+
+    \begin{solution}
+    \end{solution}
+
+    \question[(Bonus) 25]
+    This \href{https://www.mathworks.com/help/nav/ug/landmark-slam-using-apriltag-markers.html}{linked Mathworks example} uses pose graph and factor graphs for SLAM, given odom-
+    etry data and measurement data from April Tag markers being used as landmarks. You'll
+    instead implement the EKF-SLAM algorithm on the same data, to obtain the locations of all
+    landmarks and the trajectory of the robot.
+
+    \begin{solution}
+    \end{solution}
+\end{questions}
+
+\end{document}
