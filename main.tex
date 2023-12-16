@@ -58,10 +58,32 @@
     bearing, $\theta$, to the landmark $l$. Both the range and the bearing measurements are subject to
     zero-mean Gaussian noise with variances $\sigma_r^2$ and $\sigma_\theta^2$, respectively. The range and the bearing
     measurements are independent of each other.
-    
+
     Design a sensor model $p(z|x, l)$ for this type of sensor and explain it.
-    
+
     \begin{solution}
+    The sensor model $p(z|x, l)$ can be designed as follows:
+
+    \[
+    p(z|x, l) = p(r, \theta|x, l) = p(r|x, l) \cdot p(\theta|x, l)
+    \]
+
+    where $p(r|x, l)$ represents the probability distribution of the range measurement given the robot's state $x$ and the landmark $l$, and $p(\theta|x, l)$ represents the probability distribution of the bearing measurement given the robot's state $x$ and the landmark $l$.
+
+    Since both the range and bearing measurements are subject to zero-mean Gaussian noise, we can model $p(r|x, l)$ and $p(\theta|x, l)$ as Gaussian distributions. Specifically, we can use the following equations:
+
+    \[
+    p(r|x, l) = \frac{1}{\sqrt{2\pi\sigma_r^2}} \exp\left(-\frac{(r - \hat{r})^2}{2\sigma_r^2}\right)
+    \]
+
+    \[
+    p(\theta|x, l) = \frac{1}{\sqrt{2\pi\sigma_\theta^2}} \exp\left(-\frac{(\theta - \hat{\theta})^2}{2\sigma_\theta^2}\right)
+    \]
+
+    where $\hat{r}$ and $\hat{\theta}$ are the expected range and bearing measurements, respectively, based on the robot's state $x$ and the landmark $l$.
+
+    By combining these equations, we can obtain the sensor model $p(z|x, l)$ for the given sensor.
+
     \end{solution}
 
     \question[25]
