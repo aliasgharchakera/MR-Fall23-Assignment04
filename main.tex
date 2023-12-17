@@ -54,36 +54,56 @@
     the landmarks, so that when you receive a range and bearing measurement you know which
     landmark it corresponds to.
 
-    A sensor measurement $z = (r, \theta)T$ is composed of the measured distance, $r$, and the measured
-    bearing, $\theta$, to the landmark $l$. Both the range and the bearing measurements are subject to
-    zero-mean Gaussian noise with variances $\sigma_r^2$ and $\sigma_\theta^2$, respectively. The range and the bearing
-    measurements are independent of each other.
+    A sensor measurement $z = (r, \theta)T$ is composed of the measured distance,
+    $r$, and the measured bearing, $\theta$, to the landmark $l$. Both the range
+    and the bearing measurements are subject to zero-mean Gaussian noise with
+    variances $\sigma_r^2$ and $\sigma_\theta^2$, respectively. The range and the
+    bearing measurements are independent of each other.
 
     Design a sensor model $p(z|x, l)$ for this type of sensor and explain it.
 
     \begin{solution}
-    The sensor model $p(z|x, l)$ can be designed as follows:
+        The sensor model $p(z|x, l)$ can be designed as follows:
 
-    \[
-    p(z|x, l) = p(r, \theta|x, l) = p(r|x, l) \cdot p(\theta|x, l)
-    \]
+        \[
+            p(z|x, l) = p(r, \theta|x, l) = p(r|x, l) \cdot p(\theta|x, l)
+        \]
 
-    where $p(r|x, l)$ represents the probability distribution of the range measurement given the robot's state $x$ and the landmark $l$, and $p(\theta|x, l)$ represents the probability distribution of the bearing measurement given the robot's state $x$ and the landmark $l$.
+        where $p(r|x, l)$ represents the probability distribution of the range
+        measurement given the robot's state $x$ and the landmark $l$, and $p(\theta|x,
+            l)$ represents the probability distribution of the bearing measurement given
+        the robot's state $x$ and the landmark $l$.
 
-    Since both the range and bearing measurements are subject to zero-mean Gaussian noise, we can model $p(r|x, l)$ and $p(\theta|x, l)$ as Gaussian distributions. Specifically, we can use the following equations:
+        Since both the range and bearing measurements are subject to zero-mean Gaussian
+        noise, we can model $p(r|x, l)$ and $p(\theta|x, l)$ as Gaussian distributions.
+        Specifically, we can use the following equations:
 
-    \[
-    p(r|x, l) = \frac{1}{\sqrt{2\pi\sigma_r^2}} \exp\left(-\frac{(r - \hat{r})^2}{2\sigma_r^2}\right)
-    \]
+        \[
+            p(r|x, l) = \frac{1}{\sqrt{2\pi\sigma_r^2}} \exp\left(-\frac{(r - \hat{r})^2}{2\sigma_r^2}\right)
+        \]
 
-    \[
-    p(\theta|x, l) = \frac{1}{\sqrt{2\pi\sigma_\theta^2}} \exp\left(-\frac{(\theta - \hat{\theta})^2}{2\sigma_\theta^2}\right)
-    \]
+        \[
+            p(\theta|x, l) = \frac{1}{\sqrt{2\pi\sigma_\theta^2}} \exp\left(-\frac{(\theta - \hat{\theta})^2}{2\sigma_\theta^2}\right)
+        \]
 
-    where $\hat{r}$ and $\hat{\theta}$ are the expected range and bearing measurements, respectively, based on the robot's state $x$ and the landmark $l$.
+        where $\hat{r}$ and $\hat{\theta}$ are the expected range and bearing
+        measurements, respectively, based on the robot's state $x$ and the landmark
+        $l$.
 
-    By combining these equations, we can obtain the sensor model $p(z|x, l)$ for the given sensor.
+        By combining these equations, we can obtain the sensor model $p(z|x, l)$ for
+        the given sensor.
 
+        \[
+            p(z | x, l) = \frac{1}{2\pi\sigma_r\sigma_\theta} \exp\left(-\frac{(r - \hat{r})^2}{2\sigma_r^2} - \frac{(\theta - \hat{\theta})^2}{2\sigma_\theta^2}\right)
+        \]
+
+        We can write $r - \hat{r}$ and $\theta - \hat{\theta}$ as $\Delta r$ and
+        $\Delta \theta$, respectively, and take the negative in the exponent
+        common to obtain the final expression:
+
+        \[
+            p(z | x, l) = \frac{1}{2\pi\sigma_r\sigma_\theta} \exp\left[- \left(\frac{(\Delta r)^2}{2\sigma_r^2} + \frac{(\Delta \theta)^2}{2\sigma_\theta^2}\right)\right]
+        \]
     \end{solution}
 
     \question[25]
@@ -95,18 +115,19 @@
     the left-most cell and has a range sensor mounted on it that is oriented towards the right, or
     towards the lane. The robot does not move while building this map.
 
-    Assume a very simple model for the sensor: every grid cell with a distance from the robot
-    that is smaller than the measured distance is assumed to be occupied with probability $0.3$.
-    Every cell behind the measured distance is occupied with probability $0.6$. Every cell located
-    more than $20$ cm behind the measured distance should not be updated.
+    Assume a very simple model for the sensor: every grid cell with a distance from
+    the robot that is smaller than the measured distance is assumed to be occupied
+    with probability $0.3$. Every cell behind the measured distance is occupied
+    with probability $0.6$. Every cell located more than $20$ cm behind the
+    measured distance should not be updated.
 
-    Assume that we have no prior information about the occupancy of any cell. The robot receives
-    the following sequence of measurements, from its range sensor, at different time steps:
-    $\{101, 82, 91, 112, 99, 151, 96, 85, 99, 105\}$.
+    Assume that we have no prior information about the occupancy of any cell. The
+    robot receives the following sequence of measurements, from its range sensor,
+    at different time steps: $\{101, 82, 91, 112, 99, 151, 96, 85, 99, 105\}$.
 
-    Using MATLAB, find the belief of the map incorporating all the measurements. Plot the
-    probability values of each cell against your chosen representative points to obtain a PMF.
-    Based on the obtained belief, draw the map.
+    Using MATLAB, find the belief of the map incorporating all the measurements.
+    Plot the probability values of each cell against your chosen representative
+    points to obtain a PMF. Based on the obtained belief, draw the map.
 
     \begin{solution}
     \end{solution}
