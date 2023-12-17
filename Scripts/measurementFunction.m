@@ -1,17 +1,20 @@
-function [h, H_x] = measurementFunction(x, m)
+function predictedMeasurement = measurementFunction(particle, M, g)
+    % Extract particle state
+    x = particle(1);
+    y = particle(2);
+    theta = particle(3);
 
-h = [
-    m(1) - x(3)
-    m(2) - (x(1)*cos(m(1)) + x(2)*sin(m(1)))
-    ];
+    % For simplicity, let's assume a single range measurement to a known landmark
+    % In practice, you'll want to use your actual sensor model and environment data
 
-H_x = [
-    0,          0,          -1
-    -cos(m(1)), -sin(m(1)),  0
-    ];
+    % Known landmark position (example)
+    landmarkX = M(1);
+    landmarkY = M(2);
 
-[h(1), h(2), isRNegated] = normalizeLineParameters(h(1), h(2));
+    % Predict range and bearing to the landmark
+    range = sqrt((landmarkX - x)^2 + (landmarkY - y)^2);
+    bearing = atan2(landmarkY - y, landmarkX - x) - theta;
 
-if isRNegated 
-    H_x(2, :) = - H_x(2, :);
+    % Return predicted measurement
+    predictedMeasurement = [range; bearing];
 end

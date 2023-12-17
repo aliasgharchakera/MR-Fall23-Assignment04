@@ -67,6 +67,16 @@ rate = rateControl(10);
 % in place. Drive the robot by sending a message containing the angular
 % velocity and the desired linear velocity using the ROS publisher.
 prevTime = 1;
+
+% Number of particles
+M = 1000;
+% Initialize particles and weights
+Xpri = zeros(3,M);
+Xpri(1,:) = 0.5*rand(1,M);
+Xpri(2,:) = 0.5*rand(1,M);
+Xpri(3,:) = 2*pi*rand(1,M);
+
+weights = ones(M,1)/M;
 while rate.TotalElapsedTime < 100
 
 	% Get laser scan data and create a lidarScan object
@@ -124,7 +134,8 @@ while rate.TotalElapsedTime < 100
     % Extract lines
     cart(:,1) = cart(:,1)-0.032;    
     [theta,rho] = cart2pol(cart(:,1),cart(:,2));
-    [xhat, P, Xpri] = incrementalLocalization(xhat, P, u, Q, [theta'; rho'], M, params, sqrt(10), params.WHEEL_SEP);
+    % [xhat, P, Xpri] = incrementalLocalization(xhat, P, u, Q, [theta'; rho'], M, params, sqrt(10), params.WHEEL_SEP);
+    [Xpri, particles, weights] = incrementalLocalization(Xpri, weights, u, [theta'; rho'], Q, M, params, sqrt(10), params.WHEEL_SEP);
     xhat_seq = [xhat_seq, xhat];
     xbar_seq = [xbar_seq, Xpri];
     waitfor(rate);

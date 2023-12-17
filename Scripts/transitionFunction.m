@@ -1,20 +1,22 @@
-function [f, F_x, F_u] = transitionFunction(x, u, b)
-
-    % Simplified state update calculations
-    theta = x(3);
-    f = [x(1) + (u(1) + u(2)) / 2 * cos(theta)
-         x(2) + (u(1) + u(2)) / 2 * sin(theta)
-         x(3) + (u(2) - u(1)) / b
-        ];
-
-    % Simplified Jacobian with respect to the state
-    F_x = [1, 0, -(u(1) + u(2)) / 2 * sin(theta)
-           0, 1,  (u(1) + u(2)) / 2 * cos(theta)
-           0, 0,  1];
-
-    % Simplified Jacobian with respect to the control inputs
-    F_u = [cos(theta) / 2, cos(theta) / 2
-           sin(theta) / 2, sin(theta) / 2
-           -1 / b,         1 / b];
-
-end
+function newState = transitionFunction(state, control, b)
+       % Extract current state components
+       x = state(1);
+       y = state(2);
+       theta = state(3);
+   
+       % Extract control inputs (e.g., linear and angular velocity)
+       v = control(1);
+       omega = control(2);
+   
+       % Time step
+       dt = b;  % You might want to pass the time step (dt) explicitly
+   
+       % Predict next state based on motion model
+       newX = x + v * cos(theta) * dt;
+       newY = y + v * sin(theta) * dt;
+       newTheta = theta + omega * dt;
+   
+       % Return new state
+       newState = [newX, newY, newTheta];
+   end
+   
