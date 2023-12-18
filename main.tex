@@ -148,24 +148,24 @@
 
         \begin{lstlisting}[language=Matlab, caption=Occupancy Grid Mapping, label={lst:code}]
 function occupancy_grid_mapping()
-    % Define the inverse sensor model
+    % We will first define our sensor model in which we will add conditions depending on the distane of the cell from the robot
     function log_odds = inv_sensor_model(z, c)
         if c > z + 20
-            % No update if beyond 20 cm of the measurement
+            % If the measurement is beyong 20 cm, we will not update the cell as per the instructions
             log_odds = 0;
         elseif c > z
-            % Occupied with probability 0.6
+            % If the cell is behind the measured distance, it is occupied with probability 0.6
             log_odds = log(0.6 / (1 - 0.6));
         else
-            % Free with probability 0.3
+            % If the cell distance is smaller than the measured distance, it is occupied with probability 0.3
             log_odds = log(0.3 / (1 - 0.3));
         end
     end
 
-    % Cell positions in cm (0 to 200 with step of 10)
+    % We divide our path of 2 meter into grids of 10 cm
     c = 0:10:200;
 
-    % Map belief in log-odds form
+    % Map belief
     logodds = zeros(1, length(c));
 
     % Measurements in cm
@@ -184,9 +184,9 @@ function occupancy_grid_mapping()
         end
     end
 
-    % Convert log-odds to probabilities
+    % Converting the logodds function to probability 
     m = 1 - 1 ./ (1 + exp(logodds));
-    
+
     figure;
     plot(c, m, 'LineWidth', 2);
     xticks(0:10:200);
@@ -195,7 +195,13 @@ function occupancy_grid_mapping()
     title('Occupancy Grid Mapping');
     grid on;
 end     
-                        \end{lstlisting}
+        \end{lstlisting}
+
+        \textbf{Explanation of the graph:}
+        \newline
+        \\
+
+        
     \end{solution}
 
     \question[25]
@@ -212,6 +218,47 @@ end
 
     \begin{solution}
     \end{solution}
+
+    \question[20]
+    Answer the following questions individually:
+    \begin{parts}
+        \part How many hours did each of you spend on this homework?
+        \begin{solution}
+            \subsection*{Ali Asghar Yousuf}
+
+            \subsection*{Muhammad Azeem Haider}
+            12 hours
+        \end{solution}
+
+        \part State each group member's specific contribution to this homework assignment.
+        \begin{solution}
+            \subsection*{Ali Asghar Yousuf}
+            Question 1 and 3
+
+            \subsection*{Muhammad Azeem Haider}
+            Question 2 and 3
+        \end{solution}
+
+        \part Do you have any specific advice for students attempting this homework next year?
+        \begin{solution}
+            \subsection*{Ali Asghar Yousuf} 
+            % TODO: Add advice
+
+            \subsection*{Muhammad Azeem Haider}
+            Understanding the theory behind why things are happening is extremely important to make sure that these assignments are completed smoothly. I found myself stuck in my many questions previously, and in question 2 this time where I banged my head trying to fix the "code" only to realize the logic I applied was incorrect and it was all down to a lack of understanding of the question topic. As a result, it is absolutely imperative I feel like before starting questions, go through the instructor slides or the reference pages/sections in the respective book to build a stronger theoretical framework so when you're trying to complete the solution you are able to complete it smoothly. 
+
+        \end{solution}
+
+        \part Provide a self-reflection in the form of a note or a concept map.
+        \begin{solution}
+            \subsection*{Ali Asghar Yousuf}
+            % TODO: Add self-reflection
+
+            \subsection*{Muhammad Azeem Haider}
+            I attempted Question 2 and 3. While question 2 was seemingly easy, trying to figure out how to incorporate the measurements to get a beleif was going to work. It took me some time and google searches to finally understand how I can get it to work. Implementing Monte Carlo Localization was especially a challenge when it came to question 3, the matrix dimension errors were persistent and I was not able to properly figure it out despite going through the book. 
+
+        \end{solution}
+    \end{parts}
 \end{questions}
 
 \end{document}
