@@ -146,6 +146,15 @@
             \label{fig:image1} % Label for referencing the figure
         \end{figure}
 
+        \begin{figure}[H] % Example image
+            \centering
+            \includegraphics[width=0.5\textwidth]{Q2PMF2.png} % Image path and size
+            \caption{Probability Mass Function (PMF) of the occupancy grid map}
+            \label{fig:image1} % Label for referencing the figure
+        \end{figure}
+
+        We can compare the two graphs to see that the probability of the cells are same when viewed as discretized cells or continuous. 
+
         \begin{lstlisting}[language=Matlab, caption=Occupancy Grid Mapping, label={lst:code}]
 function occupancy_grid_mapping()
     % We will first define our sensor model in which we will add conditions depending on the distane of the cell from the robot
@@ -171,7 +180,6 @@ function occupancy_grid_mapping()
     % Measurements in cm
     meas = [101, 82, 91, 112, 99, 151, 96, 85, 99, 105];
 
-    % Prior in log-odds form, since p = 0.5, log-odds is 0
     prior = log(0.5 / (1 - 0.5));
     disp(['prior:', num2str(prior)]);
 
@@ -197,9 +205,7 @@ function occupancy_grid_mapping()
 end     
         \end{lstlisting}
 
-        \textbf{Explanation of the graph:}
-        \newline
-        \\
+        \textbf{Explanation of the graph:} The x-axis in the graph shows the position of the robot along the 2 meter line that is provided in the question. The line is divided into twenty distinct cells of size 10 cm as described in the question. The peaks in the graph signify occupancy of the cells and that is our condition 2 and 3, reflecting the sensor model's assignment of a 0.3 probability to cells within the measured distance and a 0.6 probability to cells just behind the measured distance up to 20 cm. The flat line in the start of the graph tells is that the cells were never updated because they were 20 cm behind any measurement. Finally the represetative point is the center of each cell that is 5, 15, 25, 35, 45, and so on cm on the 2 meter line. 
 
         
     \end{solution}
