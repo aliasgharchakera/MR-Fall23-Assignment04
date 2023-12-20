@@ -1,4 +1,4 @@
-function [P] = update_P(P, H, Fu, Fx, Q, R)
+function [P] = updateP(P, H, Fu, Fx, Q, R)
     % size_H = size(H)
     % H
     % size_P = size(P)

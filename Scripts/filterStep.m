@@ -16,7 +16,7 @@ function [updated_particles, P_posterior] = filterStep(particles, P, u, Q, Z, R,
                 W_new(i) = pdf*W_new;
             end
         % Update the Covariance matrix P
-        P(:,i:i+2) = update_P(P(:,i:i+2), H_seq, Fu, Fx, Q, R);
+        P(:,i:i+2) = updateP(P(:,i:i+2), H_seq, Fu, Fx, Q, R);
         end
     end
     % Normalize

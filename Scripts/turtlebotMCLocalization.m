@@ -36,6 +36,8 @@ linksub = rossubscriber('gazebo/link_states');
 load('M.mat');
 
 % Initialize particles and weights
+x = zeros(3,1);
+xTruth = x;
 N = 1000;
 particles = generateParticles(N, M);
 
@@ -66,7 +68,7 @@ rate = rateControl(10);
 % velocity and the desired linear velocity using the ROS publisher.
 prevTime = 1;
 
-while rate.TotalElapsedTime < 100
+while rate.TotalElapsedTime < 30
 
 	% Get laser scan data and create a lidarScan object
 	scanMsg = receive(laserSub);
@@ -114,8 +116,8 @@ while rate.TotalElapsedTime < 100
     v = (groundTruth(4) + groundTruth(5))*params.WHEEL_DIA/4;
     w = (groundTruth(5) - groundTruth(4))*params.WHEEL_DIA/(2*params.WHEEL_SEP);
     % Compute odometry and store the ground truth.
-    % x = [x, [x(1,end)+v*sampleTime*cos(x(3,end)); x(2,end)+v*sampleTime*sin(x(3,end)); x(3,end)+w*sampleTime]];    
-    % xTruth = [xTruth, groundTruth(1:3,1)];
+    x = [x, [x(1,end)+v*sampleTime*cos(x(3,end)); x(2,end)+v*sampleTime*sin(x(3,end)); x(3,end)+w*sampleTime]];    
+    xTruth = [xTruth, groundTruth(1:3,1)];
     
     u = ([groundTruth(4); groundTruth(5)] ) * sampleTime * params.WHEEL_DIA/2;
     Q = eye(2)*.000001;
@@ -138,7 +140,6 @@ figure;
 plot(xTruth(1,:),xTruth(2,:),'k.');
 hold on;
 plot(x(1,:),x(2,:),'b.');
-%plot(xbar_seq(1,:),xbar_seq(2,:),'g.');
-plot(xhat_seq(1,:),xhat_seq(2,:),'r.');
-
+plot(particles(1,:),particles(2,:),'.' )
+legend('Ground Truth', 'Odometry', 'Particles');
 
