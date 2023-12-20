@@ -35,13 +35,11 @@ linksub = rossubscriber('gazebo/link_states');
 % parameters (angle and distance) for a line/wall in the environment. 
 load('M.mat');
 
-% Set initial Pose. We're certain about our starting point.
-x = zeros(3,1);
-P = diag([0.0001; 0.0001; 0.0001]);
-xhat = x;
-xhat_seq = x;
-xbar_seq =x;
-xTruth = x;
+% Initialize particles and weights
+N = 1000;
+particles = generateParticles(N, M);
+
+P = repmat(diag([0.0001; 0.0001; 0.0001]), 1,N);
 
 
 % Set up VFH object for obstacle avoidance. Set the UseLidarScan property
@@ -68,15 +66,6 @@ rate = rateControl(10);
 % velocity and the desired linear velocity using the ROS publisher.
 prevTime = 1;
 
-% Number of particles
-M = 1000;
-% Initialize particles and weights
-Xpri = zeros(3,M);
-Xpri(1,:) = 0.5*rand(1,M);
-Xpri(2,:) = 0.5*rand(1,M);
-Xpri(3,:) = 2*pi*rand(1,M);
-
-weights = ones(M,1)/M;
 while rate.TotalElapsedTime < 100
 
 	% Get laser scan data and create a lidarScan object
@@ -125,8 +114,8 @@ while rate.TotalElapsedTime < 100
     v = (groundTruth(4) + groundTruth(5))*params.WHEEL_DIA/4;
     w = (groundTruth(5) - groundTruth(4))*params.WHEEL_DIA/(2*params.WHEEL_SEP);
     % Compute odometry and store the ground truth.
-    x = [x, [x(1,end)+v*sampleTime*cos(x(3,end)); x(2,end)+v*sampleTime*sin(x(3,end)); x(3,end)+w*sampleTime]];    
-    xTruth = [xTruth, groundTruth(1:3,1)];
+    % x = [x, [x(1,end)+v*sampleTime*cos(x(3,end)); x(2,end)+v*sampleTime*sin(x(3,end)); x(3,end)+w*sampleTime]];    
+    % xTruth = [xTruth, groundTruth(1:3,1)];
     
     u = ([groundTruth(4); groundTruth(5)] ) * sampleTime * params.WHEEL_DIA/2;
     Q = eye(2)*.000001;
@@ -135,9 +124,9 @@ while rate.TotalElapsedTime < 100
     cart(:,1) = cart(:,1)-0.032;    
     [theta,rho] = cart2pol(cart(:,1),cart(:,2));
     % [xhat, P, Xpri] = incrementalLocalization(xhat, P, u, Q, [theta'; rho'], M, params, sqrt(10), params.WHEEL_SEP);
-    [Xpri, particles, weights] = incrementalLocalization(Xpri, weights, u, [theta'; rho'], Q, M, params, sqrt(10), params.WHEEL_SEP);
-    xhat_seq = [xhat_seq, xhat];
-    xbar_seq = [xbar_seq, Xpri];
+    [particles, P] = incrementalLocalization(particles, P, u, Q, [theta'; rho'], M, params, sqrt(10), params.WHEEL_SEP);
+    % xhat_seq = [xhat_seq, xhat];
+    % xbar_seq = [xbar_seq, Xpri];
     waitfor(rate);
 end
 

@@ -1,14 +1,15 @@
-function Xpri = generateParticles(X, N, sigma, mu)
-% Generate particles around the current state
-% X: current state
-% N: number of particles
-% sigma: standard deviation of the noise
-% mu: mean of the noise
-% Xpri: generated particles
-
-Xpri = zeros(size(X,1), N);
-for i = 1:size(X,1)
-    Xpri(i,:) = X(i) + sigma(i)*randn(1,N) + mu(i);
-end
-
+function particles = generateParticles(numParticles, map)
+    angles = map(1,:);
+    M = map(2,:);
+    
+    left_max = max(M(angles == 0));
+    right_max = max(M(angles == pi));
+    up_max = max(M(angles == pi/2));
+    down_max = max(M(angles == -pi/2));
+    
+    particles = zeros(4, numParticles);
+    particles(1,:) = unifrnd(-left_max, right_max, 1, numParticles);
+    particles(2,:) = unifrnd(-down_max, up_max, 1, numParticles);
+    particles(3,:) = unifrnd(0, 2*pi, 1, numParticles);
+    particles(4,:) = ones(1, numParticles);
 end

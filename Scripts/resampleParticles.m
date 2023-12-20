@@ -1,34 +1,26 @@
-function [Xresampled, Wresampled] = resampleSystematic(X, W)
-%RESAMPLESYSTEMATIC Systematic resampling
-%   Resample the particles using the systematic resampling algorithm.
-%
-%   Inputs:
-%       X           [n x N] Particles, each column is a particle.
-%       W           [1 x N] Weights, corresponding to the particles.
-%
-%   Outputs:
-%       Xresampled  [n x N] Resampled particles, each corresponding to a
-%                           particle in X.
-%       Wresampled  [1 x N] Resampled weights, each corresponding to a
-%                           particle in Xresampled.
-%
-%   See also RESAMPLEMULTINOMIAL, RESIDUALRESAMPLING, RESAMPLESTRATIFIED
-%   and RESAMPLEINVERSETRANSFORM.
-
-% Your code here!
-N = size(X,2);
-Xresampled = zeros(size(X));
-Wresampled = zeros(size(W));
-r = rand(1)/N;
-c = W(1);
-i = 1;
-for m = 1:N
-    U = r + (m-1)/N;
-    while U > c
-        i = i + 1;
-        c = c + W(i);
+function particles = resampleParticles(X, w, N)
+    % The w array needs to be normalized
+        index = [];
+        cdf = zeros(1,N);
+        % create CDF
+        cdf(1) = w(1);
+        for i = 2:size(w,2)
+            cdf( i) = cdf( i-1) + w(i);
+        end
+    
+        u = unifrnd(0,1/N);
+        for j = 1:N
+            i = 1;
+            while u > cdf(:, i)
+                i = i + 1;
+            end
+            index = [index i];
+            u = u + 1/N;
+        end
+        X_new = X(:,index);
+        
+        particles = [X_new;
+                    ones(1, N)];
+        % disp("This is it")
+        % particles
     end
-    Xresampled(:,m) = X(:,i);
-    Wresampled(m) = 1/N;
-end
-end
