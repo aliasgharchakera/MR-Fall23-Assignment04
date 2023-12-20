@@ -385,7 +385,7 @@ function [z_, H_seq, R_seq, Associated_landmarks] = MCL_association(x, P, Z, R, 
 end
             \end{lstlisting}
 
-            \begin{lstlisting}[language=Matlab, caption=Update Particles, label={lst:code7}]
+            \begin{lstlisting}[language=Matlab, caption=Update Covariance Matrix P, label={lst:code7}]
 function [P] = updateP(P, H, Fu, Fx, Q, R)
     P_BAR = Fx*P*Fx'+Fu*Q*Fu';
     PINt = H*P_BAR*H' + R;
