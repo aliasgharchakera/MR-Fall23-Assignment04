@@ -68,7 +68,7 @@ rate = rateControl(10);
 % velocity and the desired linear velocity using the ROS publisher.
 prevTime = 1;
 
-while rate.TotalElapsedTime < 30
+while rate.TotalElapsedTime < 1000
 
 	% Get laser scan data and create a lidarScan object
 	scanMsg = receive(laserSub);

@@ -141,14 +141,14 @@
     \begin{solution}
         \begin{figure}[H] % Example image
             \centering
-            \includegraphics[width=0.5\textwidth]{Q2PMF.png} % Image path and size
+            \includegraphics[width=0.5\textwidth]{images/Q2PMF.png} % Image path and size
             \caption{Probability Mass Function (PMF) of the occupancy grid map}
             \label{fig:image1} % Label for referencing the figure
         \end{figure}
 
         \begin{figure}[H] % Example image
             \centering
-            \includegraphics[width=0.5\textwidth]{Q2PMF2.png} % Image path and size
+            \includegraphics[width=0.5\textwidth]{images/Q2PMF2.png} % Image path and size
             \caption{Probability Mass Function (PMF) of the occupancy grid map}
             \label{fig:image1} % Label for referencing the figure
         \end{figure}
@@ -343,17 +343,6 @@ end
 
             \begin{lstlisting}[language=Matlab, caption=Associate Landmarks, label={lst:code6}]
 function [z_, H_seq, R_seq, Associated_landmarks] = MCL_association(x, P, Z, R, M, g)
-    % [v, H, R] = associateMeasurements(x, P, Z, R, M, g) returns a set of
-    % innovation vectors and associated jacobians and measurement covariances
-    % by matching line features by Mahalanobis distance.
-    % v: Matrix of innovations for the selected measurements.
-    % H: Corresponding Jacobians.
-    % R: Covariance matrices of selected measurements.
-
-
-    % Make use of the measurementFunction.m to find the predicted measurements.
-
-
     first_entry = true;
     H_seq = [];
     R_seq = [];
@@ -367,13 +356,7 @@ function [z_, H_seq, R_seq, Associated_landmarks] = MCL_association(x, P, Z, R, 
         for j = 1:size(M,2)
             [h, H_x] = measurementFunction(x, M(:,j));
             v_ijt = Z(:,i) - h;
-            % h_size = size(H_x)
-            % P_size = size(P)
-            % R_size = size(R)
-            % RR = size(R(:,:,i))
-            % bruh = H_x*P*H_x'+R(:,:,i)
             
-            % R(:,:,i)
             Sigma_ijINt = H_x*P*H_x'+R(:,:,i);
             d_curr = transpose(v_ijt)*Sigma_ijINt^(-1)*v_ijt;
             if d_curr <= min_d
@@ -404,9 +387,6 @@ end
 
             \begin{lstlisting}[language=Matlab, caption=Update Particles, label={lst:code7}]
 function [P] = updateP(P, H, Fu, Fx, Q, R)
-    % size_H = size(H)
-    % H
-    % size_P = size(P)
     P_BAR = Fx*P*Fx'+Fu*Q*Fu';
     PINt = H*P_BAR*H' + R;
     Kk = P_BAR*H'*(PINt)^(-1);
@@ -417,17 +397,62 @@ end
             We are using the same \texttt{measurementFunction} as the previous homework.
         \end{solution}
         \part Results
+        \begin{solution}
+            We received the following results after running the code for 1000 particles
+            for 30 and 50 time steps. The results are shown in Figures \ref{fig:image2}
+            and \ref{fig:image3}, respectively.
+
+            \begin{figure}[H] % Example image
+                \centering
+                \includegraphics[width=0.5\textwidth]{images/T=30.png} % Image path and size
+                \caption{Results for 30 time steps}
+                \label{fig:image2} % Label for referencing the figure
+            \end{figure}
+
+            \begin{figure}[H] % Example image
+                \centering
+                \includegraphics[width=0.5\textwidth]{images/T=50.png} % Image path and size
+                \caption{Results for 50 time steps}
+                \label{fig:image3} % Label for referencing the figure
+            \end{figure}
+            For some unknown reason, the odometry also started to dose off after 10 time steps
+            which was extremely weird.
+
+            \textbf{Update:} We ran the simulation for 1000 particles for 100 and 1000 time
+            steps and the results are shown in Figures \ref{fig:image4} and \ref{fig:image5},
+
+            \begin{figure}[H] % Example image
+                \centering
+                \includegraphics[width=0.5\textwidth]{images/T=100.png} % Image path and size
+                \caption{Results for 100 time steps}
+                \label{fig:image4} % Label for referencing the figure
+            \end{figure}
+
+            We start to see some convergence after 100 time steps but it is still not good
+            enough to be considered successful.
+
+            \begin{figure}[H] % Example image
+                \centering
+                \includegraphics[width=0.5\textwidth]{images/T=1000.png} % Image path and size
+                \caption{Results for 1000 time steps}
+                \label{fig:image5} % Label for referencing the figure
+            \end{figure}
+
+            I honestly don't know what is going on here. The particles are not converging
+            at all butin this specific plot they seem to be moving away from the robot,
+            which is totally beyond my mental capacity to understand.
+        \end{solution}
         \part Discussion
+        \begin{solution}
+            The results are unsuccessful because the particles are not converging at all. We
+            could not figure out the reason for this. We tried to debug the code but we were
+            unable to find the reason for this. It could be because of the way we are
+            resampling the particles or it could be because of incorrect association of
+            landmarks. However, we see that the particles are being initliazed correctly as
+            they are being generated randomly on the limits of the map.
+
+        \end{solution}
     \end{parts}
-
-    \question[(Bonus) 20]
-    This \href{https://www.mathworks.com/help/nav/ug/landmark-slam-using-apriltag-markers.html}{linked Mathworks example} uses pose graph and factor graphs for SLAM, given odom-
-    etry data and measurement data from April Tag markers being used as landmarks. You'll
-    instead implement the EKF-SLAM algorithm on the same data, to obtain the locations of all
-    landmarks and the trajectory of the robot.
-
-    \begin{solution}
-    \end{solution}
 
     \question[20]
     Answer the following questions individually:
@@ -435,7 +460,7 @@ end
         \part How many hours did each of you spend on this homework?
         \begin{solution}
             \subsection*{Ali Asghar Yousuf}
-            7 hours
+            20 hours
             \subsection*{Muhammad Azeem Haider}
             12 hours
         \end{solution}
@@ -483,6 +508,10 @@ end
             it is still a work in progress. I understand the theory behind it but I am
             having trouble implementing it. I will try to complete it as soon as possible.
 
+            \textbf{Note:} I was unable to attempt question 3 successfully. I tried to
+            implement the algorithm as described in the book but I kept getting matrix
+            dimension errors, which took me a lot of time to figure out. However, I was
+            able to figure that out but my implementation is still not working properly.
             \subsection*{Muhammad Azeem Haider}
             I attempted Question 2 and 3. While question 2 was seemingly easy, trying to
             figure out how to incorporate the measurements to get a belief was going to
